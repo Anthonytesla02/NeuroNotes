@@ -1,0 +1,7 @@
+{
+  "name": "NeuroNotes AI",
+  "description": "A mobile-first, AI-powered note taking application featuring text-to-speech, summarization, and secure note locking.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
