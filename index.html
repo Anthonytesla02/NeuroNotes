@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#0f172a">
     <meta name="description" content="NeuroNotes AI - Intelligent Note Taking">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230ea5e9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'%2F%3E%3Cpath d='M12 7v6'%2F%3E%3Cpath d='M9 10h6'%2F%3E%3C%2Fsvg%3E">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230ea5e9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'%2F%3E%3Cpath d='M12 7v6'%2F%3E%3Cpath d='M9 10h6'%2F%3E%3C%2Fsvg%3E">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230ea5e9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2-2z'%2F%3E%3Cpath d='M12 7v6'%2F%3E%3Cpath d='M9 10h6'%2F%3E%3C%2Fsvg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230ea5e9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2-2z'%2F%3E%3Cpath d='M12 7v6'%2F%3E%3Cpath d='M9 10h6'%2F%3E%3C%2Fsvg%3E">
     
     <title>NeuroNotes AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -80,7 +84,7 @@
 </head>
   <body>
     <div id="root"></div>
-    <!-- Point to the local file explicitly -->
-    <script type="module" src="./index.tsx"></script>
+    <!-- Point to the local file using absolute path for Vercel -->
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>

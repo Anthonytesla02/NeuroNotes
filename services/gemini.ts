@@ -2,7 +2,13 @@ import { GoogleGenAI, Modality } from "@google/genai";
 import { decodeAudioData } from "./audio";
 
 // Initialize Gemini Client
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// We use a getter or simple check to avoid crashing the whole app if API_KEY is missing during initialization
+let ai: GoogleGenAI;
+try {
+  ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
+} catch (e) {
+  console.warn("Gemini Client failed to initialize. Check API Key.");
+}
 
 export const generateSummary = async (text: string): Promise<string> => {
   if (!text) return "";
