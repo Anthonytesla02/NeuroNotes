@@ -2,44 +2,64 @@ import { GoogleGenAI, Modality } from "@google/genai";
 import { decodeAudioData } from "./audio";
 
 // Initialize Gemini Client
-// We use a getter or simple check to avoid crashing the whole app if API_KEY is missing during initialization
-let ai: GoogleGenAI;
+let ai: GoogleGenAI | null = null;
+
 try {
-  ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
+  const key = process.env.API_KEY;
+  if (key && key.length > 0) {
+    ai = new GoogleGenAI({ apiKey: key });
+  }
 } catch (e) {
-  console.warn("Gemini Client failed to initialize. Check API Key.");
+  console.warn("Gemini Client failed to initialize immediately.");
 }
+
+// Helper to ensure AI is ready and throw clear error if not
+const getAI = () => {
+  if (!ai) {
+    // Double check if key exists now (in case of race conditions, though unlikely with define)
+    const key = process.env.API_KEY;
+    if (key && key.length > 0) {
+      ai = new GoogleGenAI({ apiKey: key });
+      return ai;
+    }
+    throw new Error("API Key is missing. Please check Vercel Environment Variables (VITE_GEMINI_API_KEY).");
+  }
+  return ai;
+};
 
 export const generateSummary = async (text: string): Promise<string> => {
   if (!text) return "";
   try {
-    const response = await ai.models.generateContent({
+    const client = getAI();
+    const response = await client.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: `Summarize the following note in one concise sentence: ${text}`,
     });
     return response.text || "";
-  } catch (error) {
+  } catch (error: any) {
     console.error("AI Summary Error:", error);
-    throw error;
+    throw new Error(error.message || "Failed to generate summary");
   }
 };
 
 export const enhanceNote = async (text: string, instruction: string): Promise<string> => {
   try {
-    const response = await ai.models.generateContent({
+    const client = getAI();
+    const response = await client.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: `You are an expert editor. Current note: "${text}". Instruction: ${instruction}. Return only the improved text.`,
     });
     return response.text || text;
-  } catch (error) {
+  } catch (error: any) {
     console.error("AI Enhance Error:", error);
-    throw error;
+    throw new Error(error.message || "Failed to enhance note");
   }
 };
 
 export const textToSpeech = async (text: string): Promise<AudioBuffer | null> => {
   try {
-    const response = await ai.models.generateContent({
+    const client = getAI();
+    const response = await client.models.generateContent({
       model: "gemini-2.5-flash-preview-tts",
       contents: [{ parts: [{ text: text }] }],
       config: {
@@ -55,7 +75,7 @@ export const textToSpeech = async (text: string): Promise<AudioBuffer | null> =>
     const base64Audio = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
     
     if (!base64Audio) {
-      throw new Error("No audio data received");
+      throw new Error("No audio data received from API");
     }
 
     const outputAudioContext = new (window.AudioContext || (window as any).webkitAudioContext)({
@@ -64,15 +84,16 @@ export const textToSpeech = async (text: string): Promise<AudioBuffer | null> =>
 
     return await decodeAudioData(base64Audio, outputAudioContext);
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("TTS Error:", error);
-    throw error;
+    throw new Error(error.message || "Text-to-Speech failed");
   }
 };
 
 export const transcribeAudio = async (audioBase64: string, mimeType: string): Promise<string> => {
   try {
-    const response = await ai.models.generateContent({
+    const client = getAI();
+    const response = await client.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: {
         parts: [
@@ -89,8 +110,8 @@ export const transcribeAudio = async (audioBase64: string, mimeType: string): Pr
       }
     });
     return response.text || "";
-  } catch (error) {
+  } catch (error: any) {
     console.error("Transcription Error:", error);
-    throw error;
+    throw new Error(error.message || "Transcription failed");
   }
 };

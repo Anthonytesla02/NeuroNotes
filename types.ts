@@ -9,6 +9,7 @@ export interface Note {
   tags: string[];
   isSecret?: boolean;
   isPinned?: boolean;
+  color?: string; // New property for note theme
 }
 
 export enum ViewMode {

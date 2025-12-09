@@ -15,9 +15,8 @@ export default defineConfig(({ mode }) => {
       emptyOutDir: true,
     },
     define: {
-      // JSON.stringify handles the value securely. 
-      // The || "" ensures it doesn't crash if the key is missing during build time.
-      'process.env.API_KEY': JSON.stringify(env.API_KEY || "") 
+      // Check API_KEY first, then VITE_GEMINI_API_KEY, then default to empty string
+      'process.env.API_KEY': JSON.stringify(env.API_KEY || env.VITE_GEMINI_API_KEY || "") 
     }
   };
 });
